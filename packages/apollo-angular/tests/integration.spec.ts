@@ -1,7 +1,7 @@
 import {setupAngular} from './_setup';
 
 import {TestBed, inject, async} from '@angular/core/testing';
-import {HttpClientModule, HttpClient} from '@angular/common/http';
+import {HttpClientModule} from '@angular/common/http';
 import {InMemoryCache} from 'apollo-cache-inmemory';
 
 import {mockSingleLink} from './mocks/mockLinks';
