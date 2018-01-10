@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {Injectable, Optional, Inject} from '@angular/core';
 import {
   ApolloClient,
   WatchQueryOptions,
@@ -12,7 +12,8 @@ import {Observable} from 'rxjs/Observable';
 import {from} from 'rxjs/observable/from';
 
 import {QueryRef} from './QueryRef';
-import {TypedVariables, R} from './types';
+import {TypedVariables, R, NamedOptions} from './types';
+import {ApolloOptionsToken, ApolloNamedOptionsToken} from './tokens';
 import {fromPromise, wrapWithZone} from './utils';
 
 export class ApolloBase<TCacheShape> {
@@ -80,8 +81,27 @@ export class Apollo extends ApolloBase<any> {
     ApolloBase<any>
   >();
 
-  constructor() {
+  constructor(
+    @Optional()
+    @Inject(ApolloOptionsToken)
+    apolloOptions?: ApolloClientOptions<any>,
+    @Optional()
+    @Inject(ApolloNamedOptionsToken)
+    apolloNamedOptions?: NamedOptions,
+  ) {
     super();
+
+    if (apolloOptions) {
+      this.createDefault(apolloOptions);
+    } else if (apolloNamedOptions) {
+      Object.entries(apolloNamedOptions).forEach(([name, options]) => {
+        if (name === 'default') {
+          this.createDefault(apolloNamedOptions.default);
+        } else {
+          this.createNamed(name, options);
+        }
+      });
+    }
   }
 
   public create<TCacheShape>(

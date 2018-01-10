@@ -3,6 +3,7 @@
 ### vNEXT
 
 * Brings typed variables to `QueryRef`
+* Allow to create Apollo on Dependency Injection level
 
 ### v1.0.0
 
